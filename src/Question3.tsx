@@ -1,5 +1,7 @@
 import StockTracker from "./StockTracker";
 import {useState} from "react";
+import StockCard from "./components/StockCardComponent";
+import Stock from "./models/StockInterface";
 
 const Question3: React.FC = () => {
     return (
@@ -43,33 +45,23 @@ const Question3: React.FC = () => {
 
 const StockTrackerPanel: React.FC = () => {
 
-    const [testStock, setTestStock] = useState<any>()
-    const [stockList, setStockList] = useState<any>([])
+    const [stockList, setStockList] = useState<Stock[]>([])
 
     const [currentInput, setCurrentInput] = useState<string>('')
 
     function startTrack(stockName: string) {
         const tracker = new StockTracker(stockName)
 
-        setStockList([...stockList, { name: stockName, price: '', priceHistory: [''] }])
-
-        tracker.on('data', (callback) => {
-            const updatedList = stockList.map((stock: any) => {
-                if (stock.name === stockName) {
-                    stock.price = callback.price
-                }
-                return stock
-            })
-            console.log(updatedList)
-            console.log(stockList)
-        })
+        setStockList([...stockList, {name: stockName, stockTracker: tracker}])
     }
-
 
     return (
         <div className="gap-2">
             <input className="w-32" placeholder="Stock name" onChange={event => setCurrentInput(event.target.value)}/>
             <button onClick={() => startTrack(currentInput)}>Start Tracking</button>
+            <div className="flex flex-row flex-wrap h-[500px] overflow-y-auto">
+                {stockList.map(stock => <StockCard stock={stock}/>)}
+            </div>
         </div>
     );
 };
