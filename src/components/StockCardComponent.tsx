@@ -10,7 +10,6 @@ const StockCard: React.FC<IStockCardProps> = (props) => {
     const [priceHistory, setPriceHistory] = useState<any[]>([])
     const [currentDelta, setCurrentDelta] = useState<string>('')
 
-    //
     useEffect(() => {
         props.stock.stockTracker.on('data', (callback) => {
             updatePrice(callback.price)
