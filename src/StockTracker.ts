@@ -16,6 +16,7 @@ class StockTracker {
         name: this.stock,
         price: (this.price + delta).toFixed(2),
       });
+
     }, 1500);
   }
 
@@ -25,9 +26,14 @@ class StockTracker {
   ) {
     this.emitter.on(name, callback);
   }
-
   public stop() {
     clearInterval(this.intervalId);
+    this.emitter.removeAllListeners();
+  }
+
+  // Removes listener w/o clearing interval.
+  // Clean up listener to prevent firing twice when listening in useEffect
+  public removeListeners() {
     this.emitter.removeAllListeners();
   }
 }
