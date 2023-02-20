@@ -3,16 +3,19 @@ import Stock from "../models/StockInterface";
 
 interface IStockCardProps {
     stock: Stock,
+    unTrackStock: () => void
 }
 
 const StockCard: React.FC<IStockCardProps> = (props) => {
     const [priceHistory, setPriceHistory] = useState<any[]>([])
     const [currentDelta, setCurrentDelta] = useState<string>('')
 
+    //
     useEffect(() => {
         props.stock.stockTracker.on('data', (callback) => {
             updatePrice(callback.price)
         })
+        // Clean up listener to prevent firing twice
         return () => props.stock.stockTracker.removeListeners()
     }, [])
 
@@ -26,12 +29,19 @@ const StockCard: React.FC<IStockCardProps> = (props) => {
         })
     }
 
+    // calculate delta & convert to string for render
     function setDelta(priceNew: string, priceOld: string) {
         let calcDelta = parseFloat(priceNew) - parseFloat(priceOld)
         if (isNaN(calcDelta)) calcDelta = 0
         let delta = calcDelta.toFixed(2)
         delta = delta.includes('-') ? delta : `+${delta}`
         setCurrentDelta(delta)
+    }
+
+    // unsubscribe & call on parent unTrackStock to remove stock from stockList
+    function unTrack() {
+        props.stock.stockTracker.stop()
+        props.unTrackStock()
     }
 
     return (
@@ -48,6 +58,7 @@ const StockCard: React.FC<IStockCardProps> = (props) => {
                         <p>{price}</p>
                     </div>)}
             </div>
+            <button className="absolute -top-2 -right-10 h-8 w-fit p-1 pl-2 pr-2" onClick={() => unTrack()}>untrack</button>
         </div>
     );
 };
