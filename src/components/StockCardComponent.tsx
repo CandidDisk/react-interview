@@ -54,7 +54,7 @@ const StockCard: React.FC<IStockCardProps> = (props) => {
             </div>
             <div className="flex flex-col m-2 ml-7">
                 {priceHistory?.map(price =>
-                    <div>
+                    <div key={price}>
                         <p>{price}</p>
                     </div>)}
             </div>
