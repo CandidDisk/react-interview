@@ -49,10 +49,17 @@ const StockTrackerPanel: React.FC = () => {
 
     const [currentInput, setCurrentInput] = useState<string>('')
 
+    // Add new Stock obj w/ new StockTracer as property
     function startTrack(stockName: string) {
         const tracker = new StockTracker(stockName)
-
         setStockList([...stockList, {name: stockName, stockTracker: tracker}])
+    }
+
+    // Executed by StockCard, remove selectedStock from stockList
+    const unTrackStock = (selectedStock: Stock) => {
+        setStockList(stockList.filter(stock => {
+            if (stock.name != selectedStock.name) return stock
+        }))
     }
 
     return (
@@ -60,7 +67,7 @@ const StockTrackerPanel: React.FC = () => {
             <input className="w-32" placeholder="Stock name" onChange={event => setCurrentInput(event.target.value)}/>
             <button onClick={() => startTrack(currentInput)}>Start Tracking</button>
             <div className="flex flex-row flex-wrap h-[500px] overflow-y-auto">
-                {stockList.map(stock => <StockCard stock={stock}/>)}
+                {stockList.map(stock => <StockCard key={stock.name} stock={stock} unTrackStock={() => unTrackStock(stock)}/>)}
             </div>
         </div>
     );
