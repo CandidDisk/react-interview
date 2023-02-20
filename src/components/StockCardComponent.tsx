@@ -53,8 +53,8 @@ const StockCard: React.FC<IStockCardProps> = (props) => {
                 <h1 className={`font-semibold text-2xl ${currentDelta.includes('-') ? 'text-red-600' : 'text-green-700'}`}>{currentDelta}</h1>
             </div>
             <div className="flex flex-col m-2 ml-7">
-                {priceHistory?.map(price =>
-                    <div key={price}>
+                {priceHistory?.map((price, index) =>
+                    <div key={index}>
                         <p>{price}</p>
                     </div>)}
             </div>
